@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="psn.lxy.mms.DAO.BOMMapper">
+    <insert id="saveBOMTree" useGeneratedKeys="true" keyProperty="id" parameterType="BOM">
+        insert into bom (id, material_name, needed_number, product_name, left_id, right_id) values
+            <foreach collection="list" separator="," item="bom">
+                (#{bom.id} , #{bom.materialName} , #{bom.neededNumber} , #{bom.productName} , #{bom.leftId} , #{bom.rightId})
+            </foreach>
+    </insert>
+    <insert id="insertBOMTreeNode" parameterType="BOM" keyProperty="id" useGeneratedKeys="true">
+        update bom set left_id = left_id + 2 where product_name = #{productName} and left_id >= #{leftId};
+        update bom set right_id = right_id + 2 where product_name = #{productName} and right_id >= #{rightId};
+        insert into bom (id, material_name, needed_number, product_name, left_id, right_id)
+        VALUES (#{id} , #{materialName} , #{neededNumber} , #{productName} , #{leftId} , #{rightId});
+    </insert>
+<!--    <update id="moveBOMTreeNode">-->
+<!--        <if test="pLeft > nLeft">-->
+<!--            update bom-->
+<!--            set right_id = right_id + (#{pRight} - 1 - #{nRight})-->
+<!--            where right_id &lt;= #{nRight} and left_id >= #{nLeft};-->
+<!--            update bom-->
+<!--            set right_id = right_id - (#{nRight} - #{nLeft} - 1)-->
+<!--            where right_id > #{nRight} and right_id &lt;= #{pLeft};-->
+<!--            update bom-->
+<!--            set left_id = left_id - (#{nRight} - #{nLeft} - 1)-->
+<!--            where bom.left_id >= #{nRight} and bom.left_id &lt;= #{pLeft};-->
+<!--        </if>-->
+<!--    </update>-->
+    <update id="updateBOMTreeSequence">
+        update bom set right_id = right_id + #{nodeDiff} , left_id = left_id + #{nodeDiff}
+        where id in
+        <foreach collection="nodeList" open="(" close=")" item="node" separator="," >
+            #{node}
+        </foreach>;
+        <if test="udrList.size() != 0">
+            update bom set right_id = right_id + #{udDiff}
+            where id in
+            <foreach collection="udrList" item="udr" open="(" close=")" separator=",">
+                #{udr}
+            </foreach>;
+        </if>
+
+        <if test="udlList.size() != 0">
+            update bom set left_id = left_id + #{udDiff}
+            where id in
+            <foreach collection="udlList" item="udl" open="(" close=")" separator=",">
+                #{udl}
+            </foreach>
+        </if>
+
+    </update>
+    <!--    <update id="updateBOMTreeSequenceLeaf">-->
+<!--        update bom set left_id = left_id + 2 where left_id >= #{left};-->
+<!--        update bom set right_id = right_id + 2 where right_id >= #{left};-->
+<!--    </update>-->
+
+    <delete id="deleteBOMTree">
+        delete from bom where product_name = #{name}
+    </delete>
+    <delete id="deleteBOMTreeNode">
+        delete from bom where id = #{id};
+        <if test="right - left == 1">
+            update bom set left_id = left_id - 2 where product_name = #{name} and left_id > #{left};
+            update bom set right_id = right_id - 2 where product_name = #{name} and right_id > #{left};
+        </if>
+        <if test="right - left != 1">
+            update bom set right_id = right_id - 2 where product_name = #{name} and left_id &lt; #{left} and right_id > #{right};
+            update bom set right_id = bom.right_id - 1 , left_id = left_id - 1 where product_name = #{name} and left_id > #{left} and left_id &lt; #{right}
+        </if>
+    </delete>
+
+    <select id="getBOMTree" resultType="psn.lxy.mms.POJO.BOM">
+        select * from bom where product_name = #{name} order by left_id
+    </select>
+    <select id="getBOMChildTree" resultType="psn.lxy.mms.POJO.BOM">
+        select * from bom where product_name = #{name} and left_id >= #{left} and left_id &lt;= #{right}
+    </select>
+    <select id="getBOMRightNode" resultType="psn.lxy.mms.POJO.BOM">
+        select * from bom where product_name = #{name} and bom.right_id > #{s} and bom.right_id &lt; #{b}
+    </select>
+    <select id="getBOMTreeNodeById" resultType="psn.lxy.mms.POJO.BOM">
+        select * from bom where id = #{id}
+    </select>
+    <select id="getBOMLeftNode" resultType="psn.lxy.mms.POJO.BOM">
+        select * from bom where product_name = #{name} and bom.left_id > #{s} and bom.left_id &lt; #{b}
+    </select>
+    <select id="getBOMListWithType" resultType="java.util.Map">
+        select b.material_id as materialId , a.material_name as materialName , b.type , needed_number as neededNumber from (select * from bom where product_name = #{name}) a join material b on a.material_name = b.material_name
+    </select>
+
+
+</mapper>

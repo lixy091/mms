@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="psn.lxy.mms.DAO.MaterialMapper">
+    <insert id="insertMaterial" parameterType="material" useGeneratedKeys="true" keyProperty="materialId">
+        insert into material(material_id, material_name, type, inventory) values (#{materialId} , #{materialName} , #{type} , #{inventory})
+    </insert>
+    <update id="updateMaterialInventory">
+        update material set inventory = #{number} where material_id = #{id}
+    </update>
+    <delete id="deleteMaterialById">
+        delete from material where material_id = #{id}
+    </delete>
+    <delete id="deleteMaterialByBatch">
+        delete from material where material_id in
+        <foreach collection="ids" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getMaterialById" resultType="psn.lxy.mms.POJO.Material">
+        select material_id , material_name , type , inventory
+        from material
+        where material_id = #{id}
+    </select>
+    <select id="getAllMaterial" resultType="psn.lxy.mms.POJO.Material">
+        select * from material
+    </select>
+    <select id="getLikeMaterial" resultType="psn.lxy.mms.POJO.Material">
+        select * from material where material_name like '%${keyword}%' or material_id like '%${keyword}%'
+    </select>
+    <select id="getAllProduct" resultType="psn.lxy.mms.POJO.Material">
+        select * from material where type = '成品'
+    </select>
+    <select id="getMaterialByIds" resultType="psn.lxy.mms.POJO.Material">
+        select * from material where material_id in
+        <foreach collection="ids" item="id" separator="," close=")" open="(">
+            #{id}
+        </foreach>
+    </select>
+
+
+</mapper>

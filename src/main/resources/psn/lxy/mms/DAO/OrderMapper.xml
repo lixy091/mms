@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="psn.lxy.mms.DAO.OrderMapper">
+
+    <insert id="insertOrder">
+        insert into `order` values (#{orderId} , #{userId} , #{productName} , #{state} , #{number} , #{isEnough})
+    </insert>
+    <delete id="deleteOrderById">
+        delete from `order` where order_id = #{id}
+    </delete>
+    <delete id="deleteOrderByBatch">
+        delete from `order` where order_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getAllOrder" resultType="psn.lxy.mms.POJO.Order">
+        select * from `order`;
+    </select>
+    <select id="getOrderByUser" resultType="psn.lxy.mms.POJO.Order">
+        select * from `order` where user_id = #{userId}
+    </select>
+    <select id="getOrderById" resultType="psn.lxy.mms.POJO.Order">
+        select * from `order` where order_id = #{id}
+    </select>
+    <select id="getOrderByLike" resultType="psn.lxy.mms.POJO.Order">
+        select * from `order` where order_id like '%${keyword}%' or `order`.user_id like '%${keyword}%' or product_name like '%${keyword}%'
+    </select>
+</mapper>

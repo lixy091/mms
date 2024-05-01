@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="psn.lxy.mms.DAO.ProduceMapper">
+
+    <insert id="insertProduceTable" parameterType="produceTable">
+        insert into produce_table (produce_id, product_name, user_id, produce_cycle, produce_time, state , order_id)
+        VALUES (#{produceId} , #{productName} , #{userId} , #{produceCycle} , #{produceTime} , #{State} , #{orderId})
+    </insert>
+    <update id="updateProduceState">
+        update produce_table set state = #{state} where produce_id = #{id}
+    </update>
+    <delete id="deleteProduceTableById">
+        delete from produce_table where produce_id = #{id}
+    </delete>
+    <delete id="deleteProduceTableByBatch">
+        delete from produce_table where produce_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getProduceTable" resultType="psn.lxy.mms.POJO.ProduceTable">
+        select * from produce_table where produce_id = #{id}
+    </select>
+    <select id="getAllProductTable" resultType="psn.lxy.mms.POJO.ProduceTable">
+        select * from produce_table;
+    </select>
+    <select id="getProductTableByOrder" resultType="psn.lxy.mms.POJO.ProduceTable">
+        select * from produce_table where order_id = #{orderId}
+    </select>
+    <select id="getProduceTableByLike" resultType="psn.lxy.mms.POJO.ProduceTable">
+        select * from produce_table where produce_id like '%${keyword}%' or product_name like '%${keyword}%' or user_id like '%${keyword}%' or produce_cycle like '%${keyword}%'
+    </select>
+</mapper>
