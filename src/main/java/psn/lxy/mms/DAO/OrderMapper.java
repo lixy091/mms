@@ -13,7 +13,7 @@ public interface OrderMapper {
 
     List<Order> getAllOrder();
 
-    Order getOrderByUser(@Param("userId") String userId);
+    List<Order> getOrderByUser(@Param("userId") String userId);
 
     Order getOrderById(@Param("id") Long id);
 

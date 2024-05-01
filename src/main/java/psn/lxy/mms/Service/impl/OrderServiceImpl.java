@@ -109,9 +109,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Map<String, Object> getOrderByUser(String userId) {
         Map<String , Object> resMap = new HashMap<>();
-        Order order = orderMapper.getOrderByUser(userId);
-        updateOrderState(order);
-        resMap.put("result" , order);
+        List<Order> orders = orderMapper.getOrderByUser(userId);
+        for (Order order : orders) {
+            updateOrderState(order);
+        }
+        resMap.put("result" , orders);
         resMap.put("result-code" , 1);
         resMap.put("message" , "获取成功");
         return resMap;

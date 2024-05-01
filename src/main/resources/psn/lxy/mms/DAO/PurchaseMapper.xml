@@ -5,8 +5,8 @@
 <mapper namespace="psn.lxy.mms.DAO.PurchaseMapper">
 
     <insert id="insertPurchaseTable" parameterType="purchaseTable">
-        insert into purchase_table (purchase_id, purchase_cycle, purchase_time, state)
-        values (#{purchaseId} , #{purchaseCycle} , #{purchaseTime} , #{state})
+        insert into purchase_table (purchase_id, purchase_cycle, purchase_time, state,order_id)
+        values (#{purchaseId} , #{purchaseCycle} , #{purchaseTime} , #{state} , #{orderId})
     </insert>
     <insert id="insertPurchaseList">
         insert into purchase_list (purchase_id, material_name, number) VALUES
