@@ -20,14 +20,14 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> register(User user) {
         Map<String , Object> resMap = new HashMap<>();
         if (user.getIdentity() == null){
-            user.setIdentity("用户");
+            user.setIdentity("销售部员工");
         }
         if (userMapper.getUserCount(user.getUserId()) != 0){
-            resMap.put("result" , "添加失败，该用户名已存在");
+            resMap.put("result" , "注册失败，该用户名已存在");
             resMap.put("result_code" , 0);
         }else {
             long resultCode = userMapper.addUser(user);
-            resMap.put("result" , resultCode == 1L ? "添加成功" : "添加失败");
+            resMap.put("result" , resultCode == 1L ? "注册成功" : "注册失败");
             resMap.put("result_code" , resultCode);
         }
         return resMap;

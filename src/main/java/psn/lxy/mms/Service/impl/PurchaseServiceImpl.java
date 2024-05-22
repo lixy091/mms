@@ -27,7 +27,6 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     public Map<String, Object> createPurchaseTable(Map<String, Integer> purchaseMap, Float purchaseCycle, String purchaseTime, Long orderId) {
         Map<String , Object> resMap = new HashMap<>();
-//        String purchaseId = (System.currentTimeMillis() << 5) + random.nextInt(17) + "";
         Long purchaseId = snowflake.nextId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         PurchaseTable purchaseTable = new PurchaseTable();

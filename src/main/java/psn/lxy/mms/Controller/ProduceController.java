@@ -47,7 +47,7 @@ public class ProduceController {
     public Map<String , Object> getProduceTableByLike(
             @PathVariable("keyword") String keyword
     ){
-        return               produceService.getProduceTableByLike(keyword);
+        return produceService.getProduceTableByLike(keyword);
     }
 
     //批量删除

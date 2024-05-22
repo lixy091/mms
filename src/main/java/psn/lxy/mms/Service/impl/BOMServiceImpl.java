@@ -57,7 +57,6 @@ public class BOMServiceImpl implements BOMService {
             return resMap;
         }
         Map<String , Object> root = bomTree.get(0);
-//        BOM root = bomTree.get(0);
         for (int i = 1 ; i < bomTree.size() ; i++){
             int f = (Integer) bomTree.get(i).get("left") - (Integer) bomTree.get(i - 1).get("left");
             while ( f > 1){

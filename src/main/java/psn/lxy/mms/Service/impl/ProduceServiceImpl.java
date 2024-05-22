@@ -25,7 +25,6 @@ public class ProduceServiceImpl implements ProduceService {
     public Map<String, Object> createProduceTable(String productName, String userId, Float produceCycle, String produceTime, Long orderId) {
         Map<String , Object> resMap = new HashMap<>();
         ProduceTable produceTable = new ProduceTable();
-//        String produceId = ((~System.currentTimeMillis()) << 5) + random.nextInt(17) + "";
         Long produceId = snowflake.nextId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date produceDate = null;
